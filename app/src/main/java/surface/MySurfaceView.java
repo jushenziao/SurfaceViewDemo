@@ -36,6 +36,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void initPaint() {
+		
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(30);
