@@ -19,6 +19,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private int mMeasuredWidth;
     private int mMeasuredHeight;
     private Paint mPaint;
+    private float mRawX;
+    private float mRawY;
+    private Paint mPaint1;
+    private RenderThread mRenderThread;
 
     public MySurfaceView(Context context) {
         this(context, null);
@@ -36,10 +40,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void initPaint() {
-		
+
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(30);
+        mPaint1 = new Paint();
+        mPaint1.setColor(Color.WHITE);
     }
 
     /*和普通的view一样 surfaceVIew也有这些方法*/
@@ -71,9 +77,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     /*surfaceholder特有的方法*/
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        RenderThread renderThread = new RenderThread();
+        mRenderThread = new RenderThread();
         flag = true;
-        renderThread.start();
+        mRenderThread.start();
     }
 
     @Override
@@ -91,6 +97,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     //surfaceview隐藏前(注意是隐藏)，surface被销毁。
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        if (mRenderThread != null) {
+            mRenderThread.interrupt();
+        }
         flag = false;
     }
 
@@ -99,9 +108,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         public void run() {
             // 不停绘制界面
             while (flag) {
-                drawUI();
+                try {
+                    drawUI();
+                } catch (Exception e) {
+
+                }
             }
-            super.run();
         }
     }
 
@@ -118,6 +130,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void drawCanvas(Canvas canvas) {
-        canvas.drawText("SurfaceView演示", mMeasuredWidth / 2, mMeasuredHeight / 2, mPaint);
+        canvas.drawRect(0, 0, mMeasuredWidth, mMeasuredHeight, mPaint1);
+        canvas.drawText("SurfaceView演示", mRawX, mRawY, mPaint);
+    }
+
+    public void handleEvent(MotionEvent event, int statusheight) {
+        mRawX = event.getX();
+        mRawY = event.getY() - statusheight;
     }
 }
