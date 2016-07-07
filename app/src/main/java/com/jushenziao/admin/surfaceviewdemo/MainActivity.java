@@ -1,4 +1,4 @@
-package com.jushenziao.admin.surfaceviewdemo;
+﻿package com.jushenziao.admin.surfaceviewdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,5 +17,5 @@ public class MainActivity extends AppCompatActivity {
          */
         MySurfaceView mySurfaceView = new MySurfaceView(getApplicationContext());
         setContentView(mySurfaceView);
-    }
+    }//son of beath
 }
